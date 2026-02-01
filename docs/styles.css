@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap");
+
+:root {
+  --bg: #0c0a07;
+  --text: #b8a67d;
+  --text-dim: rgba(184, 166, 125, 0.48);
+  --accent: rgba(184, 166, 125, 0.22);
+  --glow-warm: rgba(150, 110, 40, 0.055);
+  --glow-sick: rgba(75, 90, 45, 0.03);
+  --bruise: rgba(95, 55, 75, 0.025);
+  --vignette: rgba(0, 0, 0, 0.7);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ── atmospheric layers ── */
+
+/* fog, decay, bruise, vignette — the city's air */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    /* vignette — isolation pressing inward */
+    radial-gradient(ellipse 80% 70% at 50% 50%, transparent 20%, var(--vignette)),
+    /* warm amber fog — the "cozy" center */
+    radial-gradient(ellipse 45% 38% at 50% 48%, var(--glow-warm), transparent),
+    /* sickly green seepage — "rotting" */
+    radial-gradient(circle at 30% 62%, var(--glow-sick), transparent 45%),
+    radial-gradient(circle at 70% 38%, var(--glow-sick), transparent 40%),
+    /* bruised edges — "sick" */
+    radial-gradient(circle at 18% 28%, var(--bruise), transparent 35%),
+    radial-gradient(circle at 82% 72%, var(--bruise), transparent 35%);
+  pointer-events: none;
+  z-index: 1;
+  animation: breathe 10s ease-in-out infinite;
+}
+
+/* distant windows — other lives, other solitudes */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 14% 81%, rgba(200, 170, 100, 0.14), transparent),
+    radial-gradient(1px 1px at 83% 76%, rgba(200, 170, 100, 0.10), transparent),
+    radial-gradient(1px 1px at 44% 89%, rgba(200, 170, 100, 0.07), transparent),
+    radial-gradient(1px 1px at 67% 93%, rgba(200, 170, 100, 0.11), transparent),
+    radial-gradient(1px 1px at 27% 96%, rgba(200, 170, 100, 0.06), transparent),
+    radial-gradient(1.5px 1.5px at 56% 83%, rgba(180, 150, 80, 0.09), transparent),
+    radial-gradient(1px 1px at 91% 87%, rgba(200, 170, 100, 0.07), transparent),
+    radial-gradient(1px 1px at 8% 90%, rgba(200, 170, 100, 0.05), transparent),
+    radial-gradient(1px 1px at 73% 85%, rgba(200, 170, 100, 0.08), transparent);
+  pointer-events: none;
+  z-index: 1;
+  animation: city-lights 7s ease-in-out infinite alternate;
+}
+
+/* the city breathes — slow, sickly pulse */
+@keyframes breathe {
+  0%, 100% { opacity: 0.82; }
+  50% { opacity: 1; }
+}
+
+@keyframes city-lights {
+  0% { opacity: 0.45; }
+  100% { opacity: 0.75; }
+}
+
+/* ── grain overlay — urban grit, decay texture ── */
+.grain {
+  position: fixed;
+  inset: -100%;
+  width: 300%;
+  height: 300%;
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.32;
+  animation: grain-drift 0.7s steps(2) infinite;
+}
+
+@keyframes grain-drift {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-2.5%, -2.5%); }
+}
+
+/* ── content ── */
+
+.center {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 12vh 10vw;
+  position: relative;
+  z-index: 3;
+}
+
+.line {
+  font-weight: 300;
+  font-size: clamp(1.15rem, 2.2vw, 1.85rem);
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--text-dim);
+  max-width: 38ch;
+  text-shadow:
+    0 0 45px rgba(150, 110, 40, 0.07),
+    0 12px 35px rgba(0, 0, 0, 0.5);
+  animation: materialize 3.5s ease-out both;
+}
+
+/* text emerges from the haze — a thought surfacing */
+@keyframes materialize {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* thin thread of connection — "inwardly attuned" */
+.line::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: min(65px, 18vw);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 28px auto 0;
+  opacity: 0;
+  animation:
+    line-reveal 2s ease-out 3s forwards,
+    attune 8s ease-in-out 5s infinite;
+}
+
+@keyframes line-reveal {
+  to { opacity: 0.25; }
+}
+
+/* the pulse of silent solidarity */
+@keyframes attune {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
